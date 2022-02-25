@@ -1,23 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System;
+using System.Data.SqlClient;
 
 namespace LINQ2SQL
 {
-    static class Program
+    class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
+        public static string connection_string = @"Data source=(localdb)\MSSQLLocalDB;Initial Catalog=LINQ2SQL;Integrated Security = True";
+
+        static void Main(string[] args)
         {
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            GetStudents();
+        }
+
+
+        public static void GetStudents()
+        {
+            using (SqlConnection con = new(connection_string))
+            {
+                con.Open();
+                SqlCommand cmd = new("SELECT * FROM Students WHERE Name = 'Emir'", con);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    Console.WriteLine(reader.GetValue(0));
+
+                }
+
+            }
         }
     }
+
 }
