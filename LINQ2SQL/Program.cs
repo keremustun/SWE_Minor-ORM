@@ -8,6 +8,7 @@ namespace LINQ2SQL
         public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
         public static string students = "CREATE TABLE IF NOT EXISTS students (name VARCHAR ( 50 ) NOT NULL, surname VARCHAR ( 50 ) NOT NULL);";
         public static string grades = "CREATE TABLE IF NOT EXISTS grades (value VARCHAR ( 50 ) NOT NULL, courseid int NOT NULL);";
+        public static string studentData = "INSERT INTO students VALUES('kerem', 'ustun'), ('emir', 'sarikus'), ('fatih', 'catak');";
 
         static void Main(string[] args)
         {
@@ -28,6 +29,12 @@ namespace LINQ2SQL
             }
 
             using (var cmd = new NpgsqlCommand(grades, conn))
+            {
+                cmd.ExecuteNonQuery();
+                Console.WriteLine('k');
+            }
+
+            using (var cmd = new NpgsqlCommand(studentData, conn))
             {
                 cmd.ExecuteNonQuery();
                 Console.WriteLine('k');
