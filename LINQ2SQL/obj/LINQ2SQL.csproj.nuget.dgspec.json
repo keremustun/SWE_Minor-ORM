@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\kerem\\Documents\\GitHub\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\LINQ2SQL.csproj": {}
+    "C:\\Users\\F\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\LINQ2SQL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\kerem\\Documents\\GitHub\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\LINQ2SQL.csproj": {
+    "C:\\Users\\F\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\LINQ2SQL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\kerem\\Documents\\GitHub\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\LINQ2SQL.csproj",
+        "projectUniqueName": "C:\\Users\\F\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\LINQ2SQL.csproj",
         "projectName": "LINQ2SQL",
-        "projectPath": "C:\\Users\\kerem\\Documents\\GitHub\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\LINQ2SQL.csproj",
-        "packagesPath": "C:\\Users\\kerem\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\kerem\\Documents\\GitHub\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\obj\\",
+        "projectPath": "C:\\Users\\F\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\LINQ2SQL.csproj",
+        "packagesPath": "C:\\Users\\F\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\F\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\kerem\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\F\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -40,6 +40,10 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "Npgsql": {
+              "target": "Package",
+              "version": "[6.0.3, )"
+            },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.3, )"
