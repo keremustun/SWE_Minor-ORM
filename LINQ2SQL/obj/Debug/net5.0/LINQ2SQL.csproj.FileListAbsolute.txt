@@ -46,3 +46,5 @@ C:\Users\F\SWE_Minor-LINQ2SQL-by_The_Turks\LINQ2SQL\obj\Debug\net5.0\LINQ2SQL.pd
 C:\Users\F\SWE_Minor-LINQ2SQL-by_The_Turks\LINQ2SQL\obj\Debug\net5.0\LINQ2SQL.genruntimeconfig.cache
 C:\Users\F\SWE_Minor-LINQ2SQL-by_The_Turks\LINQ2SQL\bin\Debug\net5.0\Npgsql.dll
 C:\Users\F\SWE_Minor-LINQ2SQL-by_The_Turks\LINQ2SQL\bin\Debug\net5.0\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\kerem\Documents\GitHub\SWE_Minor-LINQ2SQL-by_The_Turks\LINQ2SQL\bin\Debug\net5.0\Npgsql.dll
+C:\Users\kerem\Documents\GitHub\SWE_Minor-LINQ2SQL-by_The_Turks\LINQ2SQL\bin\Debug\net5.0\System.Runtime.CompilerServices.Unsafe.dll

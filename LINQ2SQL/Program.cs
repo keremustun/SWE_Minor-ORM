@@ -25,30 +25,35 @@ namespace LINQ2SQL
             using (var cmd = new NpgsqlCommand(students, conn))
             {
                 cmd.ExecuteNonQuery();
-                Console.WriteLine('k');
+                //Console.WriteLine('k');
             }
 
             using (var cmd = new NpgsqlCommand(grades, conn))
             {
                 cmd.ExecuteNonQuery();
-                Console.WriteLine('k');
+                //Console.WriteLine('k');
             }
 
             using (var cmd = new NpgsqlCommand(studentData, conn))
             {
                 cmd.ExecuteNonQuery();
-                Console.WriteLine('k');
+               // Console.WriteLine('k');
             }
 
             // Retrieve all rows
             using (var cmd = new NpgsqlCommand("SELECT * FROM students", conn))
-            using (var reader = cmd.ExecuteReader())
             {
-                while (reader.Read()) {
-                    Console.WriteLine(reader.GetString(0));
-                    Console.WriteLine(reader.GetString(1));
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Console.WriteLine(reader.GetString(0));
+                        Console.WriteLine((reader.GetString(1)).GetType());
+                    }
                 }
             }
+               
+
         }
     }
 
