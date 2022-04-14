@@ -13,10 +13,11 @@ namespace Turkish_ORM{
             
             var conn = new NpgsqlConnection(connection_string);
             conn.Open();
-            using (var cmd = new NpgsqlCommand("SELECT * FROM students", conn))
+            using (var cmd = new NpgsqlCommand("SELECT Name, Surname FROM Students WHERE Name = 'Emir'", conn))
             {
                 using (var reader = cmd.ExecuteReader())
                 {
+                    
                     while (reader.Read())
                     {
                         var dataTable = new DataTable();
