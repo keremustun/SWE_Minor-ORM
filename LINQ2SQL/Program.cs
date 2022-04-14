@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Npgsql;
-// using Turkish_ORM;
-using System.Linq;
+using Turkish_ORM;
+//using System.Linq;
 // using System.Linq;
 
 namespace LINQ2SQL
@@ -18,22 +18,25 @@ namespace LINQ2SQL
     
         static void Main(string[] args)
         {
-            // var ax = students.Select(s => new{s.Name, s.Surname});
-            // foreach(var student in ax ){
-            //     Console.WriteLine(student.Name);
-            // }
+            students.Add(new Student(name:"Afriboy", surname:"5314"));
+            var ax = students.Select(s => new{s.Name, s.Surname});
+            foreach(var student in ax ){
+                object studentcast = (object) student;
+                Console.WriteLine(studentcast.GetType());
+                //Console.WriteLine(studentcast.Name);
+            }
             // var hurrDurr = 5;
             // MyMethod<int>(x => Console.Write(x * hurrDurr));
             // AMethod<int>(s => new { s.Name, s.Surname }));
 
             // var x = new List<int>();
             // x.Select
-            var x = new List<int>();
-            x.Add(1);
-            x.Add(2);
+            // var x = new List<int>();
+            // x.Add(1);
+            // x.Add(2);
 
-            var stringx = x.Select(num => new{ num });
-            Console.Write(stringx.GetType());
+            // var stringx = x.Select(num => new{ num });
+            // Console.Write(stringx.GetType());
         }
 
        
