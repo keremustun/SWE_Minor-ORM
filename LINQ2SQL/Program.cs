@@ -18,11 +18,11 @@ namespace LINQ2SQL
     
         static void Main(string[] args)
         {
-            students.Add(new Student(name:"Afriboy", surname:"5314"));
+            students.Add(new Student(Name:"Afriboy", Surname:"5314"));
             var ax = students.Select(s => new{s.Name, s.Surname});
             foreach(var student in ax ){
                 object studentcast = (object) student;
-                Console.WriteLine(studentcast.GetType());
+                //Console.WriteLine(studentcast.GetType());
                 //Console.WriteLine(studentcast.Name);
             }
             // var hurrDurr = 5;
@@ -52,12 +52,12 @@ namespace LINQ2SQL
         }
 
         public class Student{
-            public string Name;
-            public string Surname;
+            public string Name {get; set;}
+            public string Surname {get; set;}
             
-            public Student(string name = "", string surname = ""){
-                Name = name;
-                Surname = surname;
+            public Student(string Name = "", string Surname = ""){
+                this.Name = Name;
+                this.Surname = Surname;
             }
         }
 
