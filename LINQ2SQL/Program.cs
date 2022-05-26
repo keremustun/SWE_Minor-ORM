@@ -22,13 +22,15 @@ namespace LINQ2SQL
         {
             students2.Add(new Student(name:"Afriboy", surname:"5314"));
             students2.Add(new Student(name:"Ba", surname:"5314"));
+
             var ax = students2.Select(s => new{s.Name, s.Surname}).ToList();
-            var axx = students2.Select(s => s.Name == "Afriboy").ToList();
+            var axx = students2.Select(s => s).ToList();
+            //Svar axx = students2.Select(s => s.Name == "Afriboy").ToList();
             
-            foreach(var student in axx ){
-                object studentcast = (object) student;
-                Console.WriteLine(studentcast.GetType());
-                Console.WriteLine(student);
+            foreach(var student in ax ){
+                // object studentcast = (object) student;
+                // Console.WriteLine(studentcast.GetType());
+                // Console.WriteLine(student);
                 //Console.WriteLine(studentcast.Name);
             }
             // var hurrDurr = 5;
