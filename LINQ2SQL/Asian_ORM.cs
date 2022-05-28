@@ -7,9 +7,10 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Turkish_ORM{
+namespace Asian_ORM{
     public class DbSet<T>{
         private List<T> lst = new List<T>();
+        public string tableName = typeof(T).Name;
         public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
         
         public DbSet<U> Select<U>(Expression<Func<T,U>> lambd){
@@ -34,12 +35,12 @@ namespace Turkish_ORM{
                 columns += "*";
             }
 
-            string tableName = typeof(T).Name;
             string sqlstring = $"SELECT {columns} FROM {tableName}";
 
 
             Console.WriteLine(sqlstring);
-            // foreach(var item in lst){
+            {
+  // foreach(var item in lst){
             //     result.Add(lambd(item));
             // }
             
@@ -81,6 +82,8 @@ namespace Turkish_ORM{
             // var nameExpression = (MemberExpression) selectBody.Body;
             // string name = nameExpression.Member.Name;
              
+            }
+          
 
 
 
@@ -93,10 +96,99 @@ namespace Turkish_ORM{
             return result;
         }
 
-        // public DbSet<T> Where(System.Linq.Expressions.LambdaExpression<T> predicate){
-        //     DbSet<T> result = new();
-        //     return result;
-        // }
+        public DbSet<T> Where(Expression<Func<T,bool>> predicate){
+            string getWhereOperator(Expression<Func<T,bool>> predicate)
+            {
+                string whereOperator = "";
+                switch (predicate.Body.NodeType.ToString())
+                {
+                    case "Equal": 
+                        whereOperator += "= ";
+                        break;
+                    case "GreaterThan":
+                        whereOperator += "> ";
+                        break;
+                    case "LessThan":
+                        whereOperator += "< ";
+                        break;
+                    case "GreaterThanOrEqual":
+                        whereOperator += ">= ";
+                        break;
+                    case "LessThanOrEqual":
+                        whereOperator += "<= ";
+                        break;
+                    case "NotEqual":
+                        whereOperator += "!= ";
+                        break;
+                    // asd;lasdjl;kasd;lasdasd;l    
+                    case "Between":
+                        whereOperator += "... ";
+                        break;
+                    case "Like":
+                        whereOperator += "... ";
+                        break;
+                    case "In":
+                        whereOperator += "... ";
+                        break;
+                }
+                return whereOperator;
+            }
+            
+            Console.WriteLine(predicate.Body.GetType());
+            string sqlstring = "";
+            
+            if (!ReferenceEquals((predicate.Body as BinaryExpression),null))
+            {
+                string whereLeftOperand  = "" + (predicate.Body as BinaryExpression).Left;
+                string whereOperator = getWhereOperator(predicate);
+                string whereRightOperand = "" + (predicate.Body as BinaryExpression).Right;
+
+                // Example:  "WHERE Age > 3   
+                sqlstring = $"SELECT * FROM {tableName} WHERE {whereLeftOperand} {whereOperator} {whereRightOperand}";
+            }
+            
+            DataTable resultInDT = ExecuteQuery(sqlstring);
+           
+            DbSet<T> result = new();
+            return result;
+        }
+
+        private DataTable ExecuteQuery(string sqlstring)
+        {
+            var dataTable = new DataTable();
+            NpgsqlConnection conn = new(connection_string);
+            conn.Open();
+            using (var cmd = new NpgsqlCommand(sqlstring, conn))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    
+                    while (reader.Read())
+                    {
+                        dataTable.Load(reader);
+                        string row_as_json = JsonSerializer.Serialize(dataTable);
+                        
+                        //result.Add(actie(JsonSerializer.Deserialize<T>(row_as_json)));
+                        // int columnCount = reader.FieldCount;
+                        // string[] row = new string[columnCount]; 
+
+                        // for(int i = 0; i < row.Length; i++){
+                        //     row[i] = reader.GetName(i) + ":" + reader.GetValue(i).ToString();
+                        // }
+                        
+                        // reader.GetValues(row);
+                        // string row_as_json = JsonSerializer.Serialize(row);
+
+
+                        // result.Add(actie(reader.GetValue()))
+                        // reader.getva
+                        // T student = new T
+                        // list.Add(new T(reader.GetValue(0));
+                    }
+                }
+            }
+            return dataTable;
+        }
 
         public List<T> ToList() => lst;
 

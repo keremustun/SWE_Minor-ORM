@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Npgsql;
-using Turkish_ORM;
+using Asian_ORM;
 // using System.Linq;
 // using System.Linq;
 
@@ -24,7 +24,7 @@ namespace LINQ2SQL
             students2.Add(new Student(name:"Ba", surname:"5314"));
 
             var ax = students2.Select(s => new{s.Name, s.Surname}).ToList();
-            var axx = students2.Select(s => s).ToList();
+            var axx = students2.Where(s => s.Name.Length != 3);
             //Svar axx = students2.Select(s => s.Name == "Afriboy").ToList();
             
             foreach(var student in ax ){
