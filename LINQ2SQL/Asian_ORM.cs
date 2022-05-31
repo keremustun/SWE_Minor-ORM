@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Npgsql;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
-
+using System.Runtime.Serialization;
+using System.Dynamic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Linq;
 namespace Asian_ORM{
     public class DbSet<T>{
         private List<T> lst = new List<T>();
@@ -37,7 +39,8 @@ namespace Asian_ORM{
                 columns += "*";
             }
 
-            selectString = $"SELECT {columns} FROM {tableName} ";
+            result.selectString = $"SELECT {columns} FROM {tableName} ";
+            result.whereString = selectString;
 
 
   // foreach(var item in lst){
@@ -81,7 +84,7 @@ namespace Asian_ORM{
 
             // var nameExpression = (MemberExpression) selectBody.Body;
             // string name = nameExpression.Member.Name;
-             
+            Console.WriteLine(result.selectString);
             return result;
             }
           
@@ -103,91 +106,87 @@ namespace Asian_ORM{
                 switch (predicate.Body.NodeType.ToString())
                 {
                     case "Equal": 
-                        whereOperator += "= ";
+                        whereOperator += "=";
                         break;
                     case "GreaterThan":
-                        whereOperator += "> ";
+                        whereOperator += ">";
                         break;
                     case "LessThan":
-                        whereOperator += "< ";
+                        whereOperator += "<";
                         break;
                     case "GreaterThanOrEqual":
-                        whereOperator += ">= ";
+                        whereOperator += ">=";
                         break;
                     case "LessThanOrEqual":
-                        whereOperator += "<= ";
+                        whereOperator += "<=";
                         break;
                     case "NotEqual":
-                        whereOperator += "!= ";
+                        whereOperator += "!=";
                         break;
                     // asd;lasdjl;kasd;lasdasd;l    
                     case "Between":
-                        whereOperator += "... ";
+                        whereOperator += "...";
                         break;
                     case "Like":
-                        whereOperator += "... ";
+                        whereOperator += "...";
                         break;
                     case "In":
-                        whereOperator += "... ";
+                        whereOperator += "...";
                         break;
                 }
                 return whereOperator;
             }
-            
-            Console.WriteLine(predicate.Body.GetType());
+            DbSet<T> result = new();
             
             if (!ReferenceEquals((predicate.Body as BinaryExpression),null))
             {
-                string whereLeftOperand  = "" + (predicate.Body as BinaryExpression).Left;
+                string whereLeftOperand  = "" + (predicate.Body as BinaryExpression).Left.ToString().Split(".")[1];
+                
                 string whereOperator = getWhereOperator(predicate);
-                string whereRightOperand = "" + (predicate.Body as BinaryExpression).Right;
-
+                string whereRightOperand = "" + (predicate.Body as BinaryExpression).Right.ToString().Replace("\"", "");
+                Console.WriteLine(whereRightOperand);
                 // Example:  "WHERE Age > 3   
-                whereString = $"WHERE {whereLeftOperand} {whereOperator} {whereRightOperand}";
+                result.selectString = selectString;
+                result.whereString = $"WHERE {whereLeftOperand} {whereOperator} '{whereRightOperand}'";
             }
             
-            DbSet<T> result = new();
+            Console.WriteLine(result.whereString);
             return result;
         }
-
-        public DataTable ExecuteQuery()
+       
+        public List<object> ExecuteQuery()
         {
+            
             string sqlstring = selectString + whereString;
+            Console.WriteLine(sqlstring);
             var dataTable = new DataTable();
             NpgsqlConnection conn = new(connection_string);
             conn.Open();
+            List<object> res = new();
             using (var cmd = new NpgsqlCommand(sqlstring, conn))
             {
                 using (var reader = cmd.ExecuteReader())
                 {
-                    
-                    while (reader.Read())
-                    {
-                        dataTable.Load(reader);
-                        //string row_as_json = JsonSerializer.Serialize(dataTable);
-                        
-                        //result.Add(actie(JsonSerializer.Deserialize<T>(row_as_json)));
-                        // int columnCount = reader.FieldCount;
-                        // string[] row = new string[columnCount]; 
+                    dataTable.Load(reader);
 
-                        // for(int i = 0; i < row.Length; i++){
-                        //     row[i] = reader.GetName(i) + ":" + reader.GetValue(i).ToString();
-                        // }
-                        
-                        // reader.GetValues(row);
-                        // string row_as_json = JsonSerializer.Serialize(row);
-
-
-                        // result.Add(actie(reader.GetValue()))
-                        // reader.getva
-                        // T student = new T
-                        // list.Add(new T(reader.GetValue(0));
+                    var xz = dataTable.AsEnumerable();
+                    foreach(var x in xz){
+                        var y = x.ItemArray;
+                        foreach(var yy in y){
+                            Console.WriteLine(yy);
+                        }
+                        Console.WriteLine(y);
                     }
+                    Console.WriteLine(xz.GetType());
+                   
                 }
             }
-            
-            return dataTable;
+
+
+            return res;
         }
+
+    
 
         public List<T> ToList() => lst;
 

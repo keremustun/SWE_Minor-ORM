@@ -11,24 +11,38 @@ namespace LINQ2SQL
     class Program
     {
         public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
-        public static string students = "CREATE TABLE IF NOT EXISTS students (name VARCHAR ( 50 ) NOT NULL, surname VARCHAR ( 50 ) NOT NULL);";
+        public static string students = "CREATE TABLE IF NOT EXISTS Student (Name VARCHAR ( 50 ) NOT NULL, Surname VARCHAR ( 50 ) NOT NULL);";
         public static string grades = "CREATE TABLE IF NOT EXISTS grades (value VARCHAR ( 50 ) NOT NULL, courseid int NOT NULL);";
-        public static string studentData = "INSERT INTO students VALUES('kerem', 'ustun'), ('emir', 'sarikus'), ('fatih', 'catak');";
+        public static string studentData = "INSERT INTO student VALUES('kerem', 'ustun'), ('emir', 'sarikus'), ('fatih', 'catak');";
 
         public static List<Student> students3 = new List<Student>(){};
         public static DbSet<Student> students2 = new();
         
         static void Main(string[] args)
         {
-            
+            // NpgsqlConnection conn = new(connection_string);
+            // conn.Open();
+            // using (var cmd = new NpgsqlCommand(students, conn))
+            // {
+            //     cmd.ExecuteNonQuery();
+            //     //Console.WriteLine('k');
+            // }
+
+            // using (var cmd = new NpgsqlCommand(studentData, conn))
+            // {
+            //     cmd.ExecuteNonQuery();
+            //    // Console.WriteLine('k');
+            // }
             // students2.Add(new Student(Name:"aAfriboy", Surname:"a5314"));
             // Console.WriteLine(students3.Count);
 
-            var ax = students2.Select(s => new{s.Name, s.Surname}).Where(s => s.Name == "Emir").ExecuteQuery();
+            var ax = students2.Select(s => new{s.Name, s.Surname}).Where(s => s.Name == "emir").ExecuteQuery();
             foreach(var student in ax ){
                 object studentcast = (object) student;
+                Console.WriteLine(studentcast);
                 Console.WriteLine(studentcast.GetType());
-                //Console.WriteLine(studentcast.Name);
+                
+                                //Console.WriteLine(studentcast.Name);
             }
             // var hurrDurr = 5;
             // MyMethod<int>(x => Console.Write(x * hurrDurr));
