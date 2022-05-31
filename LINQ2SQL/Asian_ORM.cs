@@ -8,8 +8,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Asian_ORM{
-    public class DbSet<T> : IEnumerable<T>{
+    public class DbSet<T>{
         private List<T> lst = new List<T>();
+        public string selectString; 
+        public string whereString; 
         public string tableName = typeof(T).Name;
         public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
         
@@ -35,11 +37,9 @@ namespace Asian_ORM{
                 columns += "*";
             }
 
-            string sqlstring = $"SELECT {columns} FROM {tableName}";
+            selectString = $"SELECT {columns} FROM {tableName} ";
 
 
-            Console.WriteLine(sqlstring);
-            {
   // foreach(var item in lst){
             //     result.Add(lambd(item));
             // }
@@ -82,6 +82,7 @@ namespace Asian_ORM{
             // var nameExpression = (MemberExpression) selectBody.Body;
             // string name = nameExpression.Member.Name;
              
+            return result;
             }
           
 
@@ -93,8 +94,7 @@ namespace Asian_ORM{
             //     result.Add(selectBody(x));
             // }
 
-            return result;
-        }
+        
 
         public DbSet<T> Where(Expression<Func<T,bool>> predicate){
             string getWhereOperator(Expression<Func<T,bool>> predicate)
@@ -135,7 +135,6 @@ namespace Asian_ORM{
             }
             
             Console.WriteLine(predicate.Body.GetType());
-            string sqlstring = "";
             
             if (!ReferenceEquals((predicate.Body as BinaryExpression),null))
             {
@@ -144,17 +143,16 @@ namespace Asian_ORM{
                 string whereRightOperand = "" + (predicate.Body as BinaryExpression).Right;
 
                 // Example:  "WHERE Age > 3   
-                sqlstring = $"WHERE {whereLeftOperand} {whereOperator} {whereRightOperand}";
+                whereString = $"WHERE {whereLeftOperand} {whereOperator} {whereRightOperand}";
             }
             
-            DataTable resultInDT = ExecuteQuery(sqlstring);
-           
             DbSet<T> result = new();
             return result;
         }
 
-        private DataTable ExecuteQuery(string sqlstring)
+        public DataTable ExecuteQuery()
         {
+            string sqlstring = selectString + whereString;
             var dataTable = new DataTable();
             NpgsqlConnection conn = new(connection_string);
             conn.Open();
@@ -166,7 +164,7 @@ namespace Asian_ORM{
                     while (reader.Read())
                     {
                         dataTable.Load(reader);
-                        string row_as_json = JsonSerializer.Serialize(dataTable);
+                        //string row_as_json = JsonSerializer.Serialize(dataTable);
                         
                         //result.Add(actie(JsonSerializer.Deserialize<T>(row_as_json)));
                         // int columnCount = reader.FieldCount;
@@ -187,6 +185,7 @@ namespace Asian_ORM{
                     }
                 }
             }
+            
             return dataTable;
         }
 

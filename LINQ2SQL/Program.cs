@@ -20,13 +20,11 @@ namespace LINQ2SQL
         
         static void Main(string[] args)
         {
-            students3.Add(new Student(Name:"aAfriboy", Surname:"a5314"));
-            Console.WriteLine(students3.Count);
-            students2.Add(new Student(Name:"Afriboy", Surname:"5314"));
-            Console.WriteLine(students2.Count);
+            
+            // students2.Add(new Student(Name:"aAfriboy", Surname:"a5314"));
+            // Console.WriteLine(students3.Count);
 
-            var ax = students2.Select(s => new{s.Name, s.Surname});
-            var axx = students2.Where(s => s.Name == "Afriboy");
+            var ax = students2.Select(s => new{s.Name, s.Surname}).Where(s => s.Name == "Emir").ExecuteQuery();
             foreach(var student in ax ){
                 object studentcast = (object) student;
                 Console.WriteLine(studentcast.GetType());
