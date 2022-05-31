@@ -15,16 +15,21 @@ namespace LINQ2SQL
         public static string grades = "CREATE TABLE IF NOT EXISTS grades (value VARCHAR ( 50 ) NOT NULL, courseid int NOT NULL);";
         public static string studentData = "INSERT INTO students VALUES('kerem', 'ustun'), ('emir', 'sarikus'), ('fatih', 'catak');";
 
-        //public static List<Student> students = new List<Student>(){};
+        public static List<Student> students3 = new List<Student>(){};
         public static DbSet<Student> students2 = new();
         
         static void Main(string[] args)
         {
-            students.Add(new Student(Name:"Afriboy", Surname:"5314"));
-            var ax = students.Select(s => new{s.Name, s.Surname});
+            students3.Add(new Student(Name:"aAfriboy", Surname:"a5314"));
+            Console.WriteLine(students3.Count);
+            students2.Add(new Student(Name:"Afriboy", Surname:"5314"));
+            Console.WriteLine(students2.Count);
+
+            var ax = students2.Select(s => new{s.Name, s.Surname});
+            var axx = students2.Where(s => s.Name == "Afriboy");
             foreach(var student in ax ){
                 object studentcast = (object) student;
-                //Console.WriteLine(studentcast.GetType());
+                Console.WriteLine(studentcast.GetType());
                 //Console.WriteLine(studentcast.Name);
             }
             // var hurrDurr = 5;

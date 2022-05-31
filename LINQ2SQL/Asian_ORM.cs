@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Asian_ORM{
-    public class DbSet<T>{
+    public class DbSet<T> : IEnumerable<T>{
         private List<T> lst = new List<T>();
         public string tableName = typeof(T).Name;
         public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
@@ -144,7 +144,7 @@ namespace Asian_ORM{
                 string whereRightOperand = "" + (predicate.Body as BinaryExpression).Right;
 
                 // Example:  "WHERE Age > 3   
-                sqlstring = $"SELECT * FROM {tableName} WHERE {whereLeftOperand} {whereOperator} {whereRightOperand}";
+                sqlstring = $"WHERE {whereLeftOperand} {whereOperator} {whereRightOperand}";
             }
             
             DataTable resultInDT = ExecuteQuery(sqlstring);
@@ -193,9 +193,9 @@ namespace Asian_ORM{
         public List<T> ToList() => lst;
 
 
-        public void Add(T listItem){
-            lst.Add(listItem);
-        }
+        // public void Add(T listItem){
+        //     lst.Add(listItem);
+        // }
 
         public string ToSql()
         {
@@ -238,10 +238,11 @@ namespace Asian_ORM{
         //     }
         // }
     }
+
     // public static class Extensions{
     //     public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
     //     public static List<U> Select<T,U> (this List<T> list, Func<T,U> actie){
-    //         List<T> result = new();
+    //         List<U> result = new();
             
     //         var conn = new NpgsqlConnection(connection_string);
     //         conn.Open();
