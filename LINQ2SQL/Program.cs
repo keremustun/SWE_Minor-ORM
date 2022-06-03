@@ -36,7 +36,7 @@ namespace LINQ2SQL
             // students2.Add(new Student(Name:"aAfriboy", Surname:"a5314"));
             // Console.WriteLine(students3.Count);
 
-            var ax = students2.Select(s => new{s.Name, s.Surname}).Where(s => s.Name == "emir").ExecuteQuery();
+            var ax = students2.Select(s => new{s.Name, s.Surname}).Where(s => s.Name == "emir").ExecuteQuery<Student>();
             foreach(var student in ax ){
                 object studentcast = (object) student;
                 Console.WriteLine(studentcast);
@@ -73,10 +73,21 @@ namespace LINQ2SQL
         public class Student{
             public string Name {get; set;}
             public string Surname {get; set;}
+            public Grades Grades {get; set;}
             
             public Student(string Name = "", string Surname = ""){
                 this.Name = Name;
                 this.Surname = Surname;
+            }
+        }
+
+        public class Grades{
+            public string Value {get; set;}
+            public string CourseId {get; set;}
+            
+            public Grades(string Value = "", string CourseId = ""){
+                this.Value = Value;
+                this.CourseId = CourseId;
             }
         }
 
