@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "U7mRPu5hZDf5uzCf6fyZI8KlSMUiwNYZC4lhw4LN9lwLgBWCtqMbj4iPqkAdODvXOS6+5obGCa/sfag2DtyKcw==",
+  "dgSpecHash": "kjBdHElVXMBCTmnr+/A9bMRtyzmIHMpTYwR/tgqhtEs2Q3ViJSnSiVn5V0lFiRvrzY7guaXK8IxRU4xCdcWhag==",
   "success": true,
   "projectFilePath": "C:\\Users\\F\\SWE_Minor-LINQ2SQL\\LINQ2SQL\\LINQ2SQL.csproj",
   "expectedPackageFiles": [
@@ -14,7 +14,8 @@
     "C:\\Users\\F\\.nuget\\packages\\system.data.sqlclient\\4.8.3\\system.data.sqlclient.4.8.3.nupkg.sha512",
     "C:\\Users\\F\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
     "C:\\Users\\F\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
-    "C:\\Users\\F\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512"
+    "C:\\Users\\F\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512",
+    "C:\\Users\\F\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.17\\microsoft.netcore.app.host.win-x64.5.0.17.nupkg.sha512"
   ],
   "logs": []
 }

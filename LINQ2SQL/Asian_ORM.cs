@@ -14,6 +14,8 @@ namespace Asian_ORM{
         private List<T> lst = new List<T>();
         public string selectString; 
         public string whereString; 
+        public string orderByString; 
+        public string groupByString; 
         public string tableName = typeof(T).Name;
         public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
         
@@ -88,8 +90,41 @@ namespace Asian_ORM{
             return result;
             }
           
+        public DbSet<T> OrderBy<U>(Expression<Func<T,U>> lambd) 
+        {
+            DbSet<T> result = new();
+            result.selectString = selectString;
+            result.whereString = whereString;
+            result.groupByString = groupByString;
+            result.orderByString = "order by " + lambd.Body.ToString().Split(".")[1];
+            Console.WriteLine(result.orderByString);
+            return result;
+        }
 
+        public DbSet<T> groupBy<U>(Expression<Func<T,U>> lambd) 
+        {
+            DbSet<T> result = new();
+            result.selectString = selectString;
+            result.whereString = whereString;
 
+            string columns = "";
+            if (!ReferenceEquals((lambd.Body as NewExpression),null))
+            {
+                var members = (lambd.Body as NewExpression).Members;
+
+                for(int i = 0; i < members.Count; i++){
+                    string memberName = members[i].Name;
+                    columns += memberName;
+                    if (i < members.Count - 1)
+                        columns += ",";
+                }
+                
+            }
+            
+            result.groupByString = $"group by {columns}";
+            Console.WriteLine("groupbystr " + result.groupByString);
+            return result;
+        }
 
             // students.Select(x => new {x.Name, x.Surname})
 
@@ -137,7 +172,7 @@ namespace Asian_ORM{
                 return whereOperator;
             }
             DbSet<T> result = new();
-            
+            Console.WriteLine("where " + predicate.Body.GetType());
             if (!ReferenceEquals((predicate.Body as BinaryExpression),null))
             {
                 string whereLeftOperand  = "" + (predicate.Body as BinaryExpression).Left.ToString().Split(".")[1];
@@ -148,16 +183,17 @@ namespace Asian_ORM{
                 // Example:  "WHERE Age > 3   
                 result.selectString = selectString;
                 result.whereString = $"WHERE {whereLeftOperand} {whereOperator} '{whereRightOperand}'";
+                result.orderByString = result.whereString;
             }
             
             Console.WriteLine(result.whereString);
             return result;
         }
        
-        public List<object> ExecuteQuery<T>() where T : class
+        public List<object> ExecuteQuery() 
         {
             
-            string sqlstring = selectString + whereString;
+            string sqlstring = selectString + whereString + groupByString + orderByString;
             Console.WriteLine(sqlstring);
             var dataTable = new DataTable();
             NpgsqlConnection conn = new(connection_string);
@@ -169,7 +205,7 @@ namespace Asian_ORM{
                 {
                     while (reader.Read())
                     {
-                        res.Add(propToDict<T>(reader));
+                        res.Add(propToDict(reader));
                         //dataTable.Load(reader);
 
                         // var xz = dataTable.AsEnumerable();
@@ -189,7 +225,7 @@ namespace Asian_ORM{
             return res;
         }
 
-        public static T propToDict<T>(IDataRecord dictionary) where T : class
+        public static T propToDict(IDataRecord dictionary)
         {
             var type = typeof(T);
             Console.WriteLine("test123 " + type);
@@ -211,12 +247,11 @@ namespace Asian_ORM{
                 Console.WriteLine("test2 " + prop.Name);
                 Console.WriteLine("test2 " + dictionary[prop.Name]);
             }
-
+            
             return toStudent((ExpandoObject) newDictionary, student);
         }
 
-        public static T toStudent<T>(ExpandoObject dictionary, T student)
-            where T : class
+        public static T toStudent(ExpandoObject dictionary, T student)
         {
             Console.WriteLine("dictionary " + dictionary);
             foreach (var item in dictionary)
@@ -236,6 +271,7 @@ namespace Asian_ORM{
 
             foreach (var parameter in parameters)
             {
+                Console.WriteLine("param " + parameter);
                 Console.WriteLine("111 " + newDictionary[parameter.Name]);
                 parameterValues.Add(newDictionary[parameter.Name]);
             }

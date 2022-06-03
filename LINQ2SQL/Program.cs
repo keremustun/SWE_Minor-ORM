@@ -16,7 +16,7 @@ namespace LINQ2SQL
         public static string studentData = "INSERT INTO student VALUES('kerem', 'ustun'), ('emir', 'sarikus'), ('fatih', 'catak');";
 
         public static List<Student> students3 = new List<Student>(){};
-        public static DbSet<Student> students2 = new();
+        public static DbSet<Grades> students2 = new();
         
         static void Main(string[] args)
         {
@@ -36,14 +36,14 @@ namespace LINQ2SQL
             // students2.Add(new Student(Name:"aAfriboy", Surname:"a5314"));
             // Console.WriteLine(students3.Count);
 
-            var ax = students2.Select(s => new{s.Name, s.Surname}).Where(s => s.Name == "emir").ExecuteQuery<Student>();
+            var ax = students2.Select(s => new{s.CourseId, s.Value}).groupBy(s => new{s.CourseId, s.Value}).ExecuteQuery();
             foreach(var student in ax ){
                 object studentcast = (object) student;
-                Console.WriteLine(studentcast);
-                Console.WriteLine(studentcast.GetType());
-                
+                Console.WriteLine("studentcast " + studentcast);
+                Console.WriteLine("studentcast type " + studentcast.GetType());
                                 //Console.WriteLine(studentcast.Name);
             }
+
             // var hurrDurr = 5;
             // MyMethod<int>(x => Console.Write(x * hurrDurr));
             // AMethod<int>(s => new { s.Name, s.Surname }));
@@ -73,7 +73,6 @@ namespace LINQ2SQL
         public class Student{
             public string Name {get; set;}
             public string Surname {get; set;}
-            public Grades Grades {get; set;}
             
             public Student(string Name = "", string Surname = ""){
                 this.Name = Name;
@@ -83,9 +82,9 @@ namespace LINQ2SQL
 
         public class Grades{
             public string Value {get; set;}
-            public string CourseId {get; set;}
+            public int CourseId {get; set;}
             
-            public Grades(string Value = "", string CourseId = ""){
+            public Grades(string Value = "", int CourseId = 0){
                 this.Value = Value;
                 this.CourseId = CourseId;
             }
