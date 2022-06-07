@@ -204,7 +204,7 @@ namespace Asian_ORM{
             return result;
         }
        
-        public List<object> ExecuteQuery() 
+        public List<Dictionary<string,object>> ExecuteQuery() 
         {
             
             string sqlstring = selectString + whereString + groupByString + orderByString;
@@ -212,7 +212,7 @@ namespace Asian_ORM{
             var dataTable = new DataTable();
             NpgsqlConnection conn = new(connection_string);
             conn.Open();
-            List<object> res = new();
+            List<Dictionary<string,object>> res = new();
             using (var cmd = new NpgsqlCommand(sqlstring, conn))
             {
                 using (var reader = cmd.ExecuteReader())
@@ -239,33 +239,24 @@ namespace Asian_ORM{
             return res;
         }
 
-        public static T propToDict(IDataRecord dictionary)
+        public static Dictionary<string,object> propToDict(IDataRecord datarec)
         {
             var type = typeof(T);
-            Console.WriteLine("test123 " + type);
             var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            
-            Console.WriteLine("test " + props.GetType());
-            foreach (var item in props)
-            {
-                Console.WriteLine("test1 " + item);
-            }
 
-            var student = (T) FormatterServices.GetUninitializedObject(type);
+            var classType = (T) FormatterServices.GetUninitializedObject(type);
 
-            var newDictionary = new ExpandoObject() as IDictionary<string, Object>;
+            var dict = new ExpandoObject() as IDictionary<string, Object>;
             
             foreach (var prop in props)
             {
-                newDictionary.Add(prop.Name, dictionary[prop.Name]);
-                Console.WriteLine("test2 " + prop.Name);
-                Console.WriteLine("test2 " + dictionary[prop.Name]);
+                dict.Add(prop.Name, datarec[prop.Name]);
             }
             
-            return toStudent((ExpandoObject) newDictionary, student);
+            return ExpandoToDict((ExpandoObject) dict, classType);
         }
 
-        public static T toStudent(ExpandoObject dictionary, T student)
+        public static Dictionary<string,object> ExpandoToDict(ExpandoObject dictionary, T student)
         {
             Console.WriteLine("dictionary " + dictionary);
             foreach (var item in dictionary)
@@ -274,23 +265,23 @@ namespace Asian_ORM{
             }
             Console.WriteLine("student " + student);
             IDictionary<string, object> newDictionary = dictionary;
+            return new Dictionary<string, object>(newDictionary);
+            // //returns student construconstructorStudent. returns error if more construconstructorStudents
+            // var constructorOfClass = student.GetType().GetConstructors().Single();
+            // Console.WriteLine("constructorStudent " + constructorOfClass);
 
-            //returns student construconstructorStudent. returns error if more construconstructorStudents
-            var constructorStudent = student.GetType().GetConstructors().Single();
-            Console.WriteLine("constructorStudent " + constructorStudent);
+            // var parameters = constructorOfClass.GetParameters();
 
-            var parameters = constructorStudent.GetParameters();
+            // var parameterValues = new List<Object>();
 
-            var parameterValues = new List<Object>();
+            // foreach (var parameter in parameters)
+            // {
+            //     Console.WriteLine("param " + parameter);
+            //     Console.WriteLine("111 " + newDictionary[parameter.Name]);
+            //     parameterValues.Add(newDictionary[parameter.Name]);
+            // }
 
-            foreach (var parameter in parameters)
-            {
-                Console.WriteLine("param " + parameter);
-                Console.WriteLine("111 " + newDictionary[parameter.Name]);
-                parameterValues.Add(newDictionary[parameter.Name]);
-            }
-
-            return (T) constructorStudent.Invoke(parameterValues.ToArray());
+            // return (T) constructorOfClass.Invoke(parameterValues.ToArray());
         }
 
         public List<T> ToList() => lst;

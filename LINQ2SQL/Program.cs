@@ -15,8 +15,7 @@ namespace LINQ2SQL
         public static string grades = "CREATE TABLE IF NOT EXISTS grades (value VARCHAR ( 50 ) NOT NULL, courseid int NOT NULL);";
         public static string studentData = "INSERT INTO student VALUES('kerem', 'ustun'), ('emir', 'sarikus'), ('fatih', 'catak');";
 
-        public static List<Student> students3 = new List<Student>(){};
-        public static DbSet<Grades> students2 = new();
+        public static DbSet<Student> students2 = new();
         
         static void Main(string[] args)
         {
@@ -36,14 +35,11 @@ namespace LINQ2SQL
             // students2.Add(new Student(Name:"aAfriboy", Surname:"a5314"));
             // Console.WriteLine(students3.Count);
 
-            var ax = students2.Select(s => new{s.CourseId, s.Value}).OrderBy(s => s.Value).ExecuteQuery();
+            var ax = students2.Select(s => new{s.Name}).OrderBy(s => s.Name).GroupBy(s => new {s.Name}).ExecuteQuery();
             foreach(var student in ax ){
-                object studentcast = (object) student;
-                Console.WriteLine("studentcast " + studentcast);
-                Console.WriteLine("studentcast type " + studentcast.GetType());
+                Console.WriteLine(student["Name"]);
                                 //Console.WriteLine(studentcast.Name);
             }
-
             // var hurrDurr = 5;
             // MyMethod<int>(x => Console.Write(x * hurrDurr));
             // AMethod<int>(s => new { s.Name, s.Surname }));
