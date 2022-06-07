@@ -96,12 +96,26 @@ namespace Asian_ORM{
             result.selectString = selectString;
             result.whereString = whereString;
             result.groupByString = groupByString;
-            result.orderByString = "order by " + lambd.Body.ToString().Split(".")[1];
+
+            string columns = "";
+            if (!ReferenceEquals((lambd.Body as NewExpression),null)) {
+                var members = (lambd.Body as NewExpression).Members;
+                for(int i = 0; i < members.Count; i++){
+                    string memberName = members[i].Name;
+                    columns += memberName;
+                    if (i < members.Count - 1)
+                        columns += ",";
+                } 
+                result.orderByString = $"order by {columns}";
+            }
+            else {
+                result.orderByString = "order by " + lambd.Body.ToString().Split(".")[1];
+            }
             Console.WriteLine(result.orderByString);
             return result;
         }
 
-        public DbSet<T> groupBy<U>(Expression<Func<T,U>> lambd) 
+        public DbSet<T> GroupBy<U>(Expression<Func<T,U>> lambd) 
         {
             DbSet<T> result = new();
             result.selectString = selectString;

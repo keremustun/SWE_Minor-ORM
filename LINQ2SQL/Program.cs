@@ -36,7 +36,7 @@ namespace LINQ2SQL
             // students2.Add(new Student(Name:"aAfriboy", Surname:"a5314"));
             // Console.WriteLine(students3.Count);
 
-            var ax = students2.Select(s => new{s.CourseId, s.Value}).groupBy(s => new{s.CourseId, s.Value}).ExecuteQuery();
+            var ax = students2.Select(s => new{s.CourseId, s.Value}).OrderBy(s => s.Value).ExecuteQuery();
             foreach(var student in ax ){
                 object studentcast = (object) student;
                 Console.WriteLine("studentcast " + studentcast);
