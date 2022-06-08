@@ -35,9 +35,14 @@ namespace LINQ2SQL
             // students2.Add(new Student(Name:"aAfriboy", Surname:"a5314"));
             // Console.WriteLine(students3.Count);
 
-            var ax = students2.Select(s => new{s.Name}).OrderBy(s => s.Name).GroupBy(s => new {s.Name}).ExecuteQuery();
+            var ax = students2.Select(s => new{s.Name,s.Surname}).OrderBy(s => s.Name).GroupBy(s => new {s.Name, s.Surname}).ExecuteQuery();
             foreach(var student in ax ){
-                Console.WriteLine(student["Name"]);
+                foreach(var kv in student)
+                {
+                    Console.WriteLine(kv.Key + ":" + kv.Value);
+                }
+                System.Console.WriteLine("\n");
+                
                                 //Console.WriteLine(studentcast.Name);
             }
             // var hurrDurr = 5;

@@ -6,9 +6,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Dynamic;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Linq;
 namespace Asian_ORM{
     public class DbSet<T>{
         private List<T> lst = new List<T>();
@@ -86,7 +83,7 @@ namespace Asian_ORM{
 
             // var nameExpression = (MemberExpression) selectBody.Body;
             // string name = nameExpression.Member.Name;
-            Console.WriteLine(result.selectString);
+            //Console.WriteLine(result.selectString);
             return result;
             }
           
@@ -111,7 +108,7 @@ namespace Asian_ORM{
             else {
                 result.orderByString = "order by " + lambd.Body.ToString().Split(".")[1];
             }
-            Console.WriteLine(result.orderByString);
+            //Console.WriteLine(result.orderByString);
             return result;
         }
 
@@ -136,7 +133,7 @@ namespace Asian_ORM{
             }
             
             result.groupByString = $"group by {columns}";
-            Console.WriteLine("groupbystr " + result.groupByString);
+            //Console.WriteLine("groupbystr " + result.groupByString);
             return result;
         }
 
@@ -186,21 +183,20 @@ namespace Asian_ORM{
                 return whereOperator;
             }
             DbSet<T> result = new();
-            Console.WriteLine("where " + predicate.Body.GetType());
             if (!ReferenceEquals((predicate.Body as BinaryExpression),null))
             {
                 string whereLeftOperand  = "" + (predicate.Body as BinaryExpression).Left.ToString().Split(".")[1];
                 
                 string whereOperator = getWhereOperator(predicate);
                 string whereRightOperand = "" + (predicate.Body as BinaryExpression).Right.ToString().Replace("\"", "");
-                Console.WriteLine(whereRightOperand);
+                //Console.WriteLine(whereRightOperand);
                 // Example:  "WHERE Age > 3   
                 result.selectString = selectString;
                 result.whereString = $"WHERE {whereLeftOperand} {whereOperator} '{whereRightOperand}'";
                 result.orderByString = result.whereString;
             }
             
-            Console.WriteLine(result.whereString);
+            //Console.WriteLine(result.whereString);
             return result;
         }
        
@@ -208,7 +204,7 @@ namespace Asian_ORM{
         {
             
             string sqlstring = selectString + whereString + groupByString + orderByString;
-            Console.WriteLine(sqlstring);
+            //Console.WriteLine(sqlstring);
             var dataTable = new DataTable();
             NpgsqlConnection conn = new(connection_string);
             conn.Open();
@@ -258,12 +254,6 @@ namespace Asian_ORM{
 
         public static Dictionary<string,object> ExpandoToDict(ExpandoObject dictionary, T student)
         {
-            Console.WriteLine("dictionary " + dictionary);
-            foreach (var item in dictionary)
-            {
-                Console.WriteLine("dictionary1 " + item);
-            }
-            Console.WriteLine("student " + student);
             IDictionary<string, object> newDictionary = dictionary;
             return new Dictionary<string, object>(newDictionary);
             // //returns student construconstructorStudent. returns error if more construconstructorStudents
