@@ -8,11 +8,9 @@ using System.Runtime.Serialization;
 using System.Dynamic;
 namespace Asian_ORM{
     public class DbSet<T>{
+        // Manual: first .where() then .select()
         private List<T> lst = new List<T>();
-        public string selectString; 
-        public string whereString; 
-        public string orderByString; 
-        public string groupByString; 
+        public string selectString, whereString, orderByString, groupByString; 
         public string tableName = typeof(T).Name;
         public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
         
@@ -39,7 +37,7 @@ namespace Asian_ORM{
             }
 
             result.selectString = $"SELECT {columns} FROM {tableName} ";
-            result.whereString = selectString;
+            result.whereString = whereString;
 
 
   // foreach(var item in lst){
@@ -103,10 +101,10 @@ namespace Asian_ORM{
                     if (i < members.Count - 1)
                         columns += ",";
                 } 
-                result.orderByString = $"order by {columns}";
+                result.orderByString = $" order by {columns}";
             }
             else {
-                result.orderByString = "order by " + lambd.Body.ToString().Split(".")[1];
+                result.orderByString = " order by " + lambd.Body.ToString().Split(".")[1];
             }
             //Console.WriteLine(result.orderByString);
             return result;
@@ -117,6 +115,7 @@ namespace Asian_ORM{
             DbSet<T> result = new();
             result.selectString = selectString;
             result.whereString = whereString;
+            result.orderByString = orderByString;
 
             string columns = "";
             if (!ReferenceEquals((lambd.Body as NewExpression),null))
@@ -132,7 +131,7 @@ namespace Asian_ORM{
                 
             }
             
-            result.groupByString = $"group by {columns}";
+            result.groupByString = $" group by {columns}";
             //Console.WriteLine("groupbystr " + result.groupByString);
             return result;
         }
@@ -192,7 +191,16 @@ namespace Asian_ORM{
                 //Console.WriteLine(whereRightOperand);
                 // Example:  "WHERE Age > 3   
                 result.selectString = selectString;
-                result.whereString = $"WHERE {whereLeftOperand} {whereOperator} '{whereRightOperand}'";
+                result.whereString = $"WHERE {whereLeftOperand} {whereOperator} ";
+                if (int.TryParse(whereRightOperand, out int n))
+                {
+                    result.whereString += whereRightOperand;
+                }
+                else
+                {
+                     result.whereString += $"'{whereRightOperand}'";
+                }
+
                 result.orderByString = result.whereString;
             }
             
@@ -204,7 +212,7 @@ namespace Asian_ORM{
         {
             
             string sqlstring = selectString + whereString + groupByString + orderByString;
-            //Console.WriteLine(sqlstring);
+            Console.WriteLine(sqlstring);
             var dataTable = new DataTable();
             NpgsqlConnection conn = new(connection_string);
             conn.Open();
@@ -279,12 +287,7 @@ namespace Asian_ORM{
 
         // public void Add(T listItem){
         //     lst.Add(listItem);
-        // }
-
-        public string ToSql()
-        {
-            return null;
-        }
+        //
 
         // List<T> Run(){
         //     var sql = ToSql();

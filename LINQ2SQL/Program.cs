@@ -1,41 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using Npgsql;
 using Asian_ORM;
-// using System.Linq;
-// using System.Linq;
+using Npgsql;
 
 namespace LINQ2SQL
 {
     class Program
     {
         public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
-        public static string students = "CREATE TABLE IF NOT EXISTS Student (Name VARCHAR ( 50 ) NOT NULL, Surname VARCHAR ( 50 ) NOT NULL);";
-        public static string grades = "CREATE TABLE IF NOT EXISTS grades (value VARCHAR ( 50 ) NOT NULL, courseid int NOT NULL);";
+        public static string studentsqry = "CREATE TABLE IF NOT EXISTS Student (Name VARCHAR ( 50 ) NOT NULL, Surname VARCHAR ( 50 ) NOT NULL);";
+        public static string gradesqry = "CREATE TABLE IF NOT EXISTS Grade (value VARCHAR ( 50 ) NOT NULL, courseid int NOT NULL);";
         public static string studentData = "INSERT INTO student VALUES('kerem', 'ustun'), ('emir', 'sarikus'), ('fatih', 'catak');";
+        public static string gradesData = "INSERT INTO grade VALUES('8', 1000), ('9', 2000);";
 
-        public static DbSet<Student> students2 = new();
+        public static DbSet<Student> students = new();
+        public static DbSet<Grade> grades = new();
         
         static void Main(string[] args)
         {
             // NpgsqlConnection conn = new(connection_string);
             // conn.Open();
-            // using (var cmd = new NpgsqlCommand(students, conn))
+            // using (var cmd = new NpgsqlCommand(studentsqry, conn))
             // {
             //     cmd.ExecuteNonQuery();
             //     //Console.WriteLine('k');
             // }
 
-            // using (var cmd = new NpgsqlCommand(studentData, conn))
+            // using (var cmd = new NpgsqlCommand(gradesqry, conn))
             // {
             //     cmd.ExecuteNonQuery();
             //    // Console.WriteLine('k');
             // }
-            // students2.Add(new Student(Name:"aAfriboy", Surname:"a5314"));
-            // Console.WriteLine(students3.Count);
+            // using (var cmd = new NpgsqlCommand(studentData, conn))
+            //             {
+            //                 cmd.ExecuteNonQuery();
+            //             // Console.WriteLine('k');
+            //             }
+            // using (var cmd = new NpgsqlCommand(gradesData, conn))
+            // {
+            //     cmd.ExecuteNonQuery();
+            //    // Console.WriteLine('k');
+            // }
+  
 
-            var ax = students2.Select(s => new{s.Name,s.Surname}).OrderBy(s => s.Name).GroupBy(s => new {s.Name, s.Surname}).ExecuteQuery();
+            var ax = grades.Where(g => g.CourseId > 1000).Select(s => new{s.Value}).ExecuteQuery();
+            //var axx = students2..Select(s => new{s.Name,s.Surname}).ExecuteQuery();
             foreach(var student in ax ){
                 foreach(var kv in student)
                 {
@@ -81,11 +89,11 @@ namespace LINQ2SQL
             }
         }
 
-        public class Grades{
+        public class Grade{
             public string Value {get; set;}
             public int CourseId {get; set;}
             
-            public Grades(string Value = "", int CourseId = 0){
+            public Grade(string Value = "", int CourseId = 0){
                 this.Value = Value;
                 this.CourseId = CourseId;
             }
