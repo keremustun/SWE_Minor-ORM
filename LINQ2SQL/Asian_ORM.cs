@@ -14,10 +14,9 @@ namespace Asian_ORM{
         public string tableName = typeof(T).Name;
         public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
         
-        public DbSet<U> Select<U>(Expression<Func<T,U>> lambd){
+        public DbSet<U> Select<U>(Expression<Func<T,U>> lambd)
+        {
             DbSet<U> result = new();
-            // var x = lambd(default(T));
-
             string columns = "";
             if (!ReferenceEquals((lambd.Body as NewExpression),null))
             {
@@ -28,60 +27,14 @@ namespace Asian_ORM{
                     columns += memberName;
                     if (i < members.Count - 1)
                         columns += ",";
-                }
-                
-            }
-            
+                }   
+            } 
             else{
                 columns += "*";
             }
 
             result.selectString = $"SELECT {columns} FROM {tableName} ";
             result.whereString = whereString;
-
-
-  // foreach(var item in lst){
-            //     result.Add(lambd(item));
-            // }
-            
-            // foreach(var item in result.lst){
-            //     Console.WriteLine(item);
-            // }
-            
-
-            
-            // Expression<Func<T,U>> selectBodyExpression = selectBody as Expression<Func<T,U>> ;
-
-
-            // Expression<Func<T,U>> xpression = selectBody as Expression<Func<T,U>>;
-            // var x = xpression.Body as ;
-            // // Console.WriteLine(selectBody.Body);
-            // Console.WriteLine(selectBody.Body);
-            // ParameterExpression paramExpr = Expression.Parameter(typeof(T));
-            // var x = selectBody.ToString().Split(",");
-            // Console.WriteLine(x[0]);
-            // Console.WriteLine(x[1]);
-            //Console.WriteLine(x.Type);
-
-            // var objectMember = Expression.Convert(me, typeof(object));
-            // var getterLambda = Expression.Lambda<Func<object>>(objectMember);
-            // var getter = getterLambda.Compile();
-            // selectBody.Body as MemberExpression ?? ((UnaryExpression)selectBody.Body).Operand as MemberExpression).Member.Name
-            // MemberExpression body = selectBody.Body as MemberExpression;
-
-            // if (body == null) {
-            // UnaryExpression ubody = (UnaryExpression)selectBody.Body;
-            // body = ubody.Operand as MemberExpression;
-            // }
-
-            // var propInfo = me.Member as PropertyInfo;
-            // var myval = propInfo.GetCustomAttributes();
-            // var d = paramType.GetMember("Name").Member.Name)[0].Name;
-            // Console.WriteLine(body.Member.Name);
-
-            // var nameExpression = (MemberExpression) selectBody.Body;
-            // string name = nameExpression.Member.Name;
-            //Console.WriteLine(result.selectString);
             return result;
             }
           
@@ -106,7 +59,6 @@ namespace Asian_ORM{
             else {
                 result.orderByString = " order by " + lambd.Body.ToString().Split(".")[1];
             }
-            //Console.WriteLine(result.orderByString);
             return result;
         }
 
@@ -132,19 +84,11 @@ namespace Asian_ORM{
             }
             
             result.groupByString = $" group by {columns}";
-            //Console.WriteLine("groupbystr " + result.groupByString);
             return result;
         }
 
-            // students.Select(x => new {x.Name, x.Surname})
-
-            // foreach(var x in lst){
-            //     result.Add(selectBody(x));
-            // }
-
-        
-
-        public DbSet<T> Where(Expression<Func<T,bool>> predicate){
+        public DbSet<T> Where(Expression<Func<T,bool>> predicate)
+        {
             string getWhereOperator(Expression<Func<T,bool>> predicate)
             {
                 string whereOperator = "";
@@ -167,8 +111,7 @@ namespace Asian_ORM{
                         break;
                     case "NotEqual":
                         whereOperator += "!=";
-                        break;
-                    // asd;lasdjl;kasd;lasdasd;l    
+                        break; 
                     case "Between":
                         whereOperator += "...";
                         break;
@@ -181,15 +124,14 @@ namespace Asian_ORM{
                 }
                 return whereOperator;
             }
+
             DbSet<T> result = new();
             if (!ReferenceEquals((predicate.Body as BinaryExpression),null))
             {
                 string whereLeftOperand  = "" + (predicate.Body as BinaryExpression).Left.ToString().Split(".")[1];
-                
                 string whereOperator = getWhereOperator(predicate);
                 string whereRightOperand = "" + (predicate.Body as BinaryExpression).Right.ToString().Replace("\"", "");
-                //Console.WriteLine(whereRightOperand);
-                // Example:  "WHERE Age > 3   
+                //Console.WriteLine(whereLeftOperand);
                 result.selectString = selectString;
                 result.whereString = $"WHERE {whereLeftOperand} {whereOperator} ";
                 if (int.TryParse(whereRightOperand, out int n))
@@ -203,8 +145,6 @@ namespace Asian_ORM{
 
                 result.orderByString = result.whereString;
             }
-            
-            //Console.WriteLine(result.whereString);
             return result;
         }
        
@@ -224,22 +164,9 @@ namespace Asian_ORM{
                     while (reader.Read())
                     {
                         res.Add(propToDict(reader));
-                        //dataTable.Load(reader);
-
-                        // var xz = dataTable.AsEnumerable();
-                        // foreach(var x in xz){
-                        //     var y = x.ItemArray;
-                        //     foreach(var yy in y){
-                        //         Console.WriteLine(yy);
-                        //     }
-                        //     Console.WriteLine(y);
-                        // }
-                        // Console.WriteLine(xz.GetType());
                     }
                 }
             }
-
-
             return res;
         }
 
@@ -247,9 +174,6 @@ namespace Asian_ORM{
         {
             var type = typeof(T);
             var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            var classType = (T) FormatterServices.GetUninitializedObject(type);
-
             var dict = new ExpandoObject() as IDictionary<string, Object>;
             
             foreach (var prop in props)
@@ -257,135 +181,7 @@ namespace Asian_ORM{
                 dict.Add(prop.Name, datarec[prop.Name]);
             }
             
-            return ExpandoToDict((ExpandoObject) dict, classType);
+            return new Dictionary<string, object>(dict);
         }
-
-        public static Dictionary<string,object> ExpandoToDict(ExpandoObject dictionary, T student)
-        {
-            IDictionary<string, object> newDictionary = dictionary;
-            return new Dictionary<string, object>(newDictionary);
-            // //returns student construconstructorStudent. returns error if more construconstructorStudents
-            // var constructorOfClass = student.GetType().GetConstructors().Single();
-            // Console.WriteLine("constructorStudent " + constructorOfClass);
-
-            // var parameters = constructorOfClass.GetParameters();
-
-            // var parameterValues = new List<Object>();
-
-            // foreach (var parameter in parameters)
-            // {
-            //     Console.WriteLine("param " + parameter);
-            //     Console.WriteLine("111 " + newDictionary[parameter.Name]);
-            //     parameterValues.Add(newDictionary[parameter.Name]);
-            // }
-
-            // return (T) constructorOfClass.Invoke(parameterValues.ToArray());
-        }
-
-        public List<T> ToList() => lst;
-
-
-        // public void Add(T listItem){
-        //     lst.Add(listItem);
-        //
-
-        // List<T> Run(){
-        //     var sql = ToSql();
-            
-        //     var conn = new NpgsqlConnection(connection_string);
-        //     using (var cmd = new NpgsqlCommand(sql, conn))
-        //     {
-        //         using (var reader = cmd.ExecuteReader())
-        //         {
-                    
-        //             while (reader.Read())
-        //             {
-        //                 var dataTable = new DataTable();
-        //                 dataTable.Load(reader);
-        //                 string row_as_json = JsonSerializer.Serialize(dataTable);
-                        
-        //                 //result.Add(actie(JsonSerializer.Deserialize<T>(row_as_json)));
-        //                 // int columnCount = reader.FieldCount;
-        //                 // string[] row = new string[columnCount]; 
-
-        //                 // for(int i = 0; i < row.Length; i++){
-        //                 //     row[i] = reader.GetName(i) + ":" + reader.GetValue(i).ToString();
-        //                 // }
-                        
-        //                 // reader.GetValues(row);
-        //                 // string row_as_json = JsonSerializer.Serialize(row);
-
-
-        //                 // result.Add(actie(reader.GetValue()))
-        //                 // reader.getva
-        //                 // T student = new T
-        //                 // list.Add(new T(reader.GetValue(0));
-        //             }
-        //         }
-        //     }
-        // }
     }
-
-    // public static class Extensions{
-    //     public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
-    //     public static List<U> Select<T,U> (this List<T> list, Func<T,U> actie){
-    //         List<U> result = new();
-            
-    //         var conn = new NpgsqlConnection(connection_string);
-    //         conn.Open();
-    //         using (var cmd = new NpgsqlCommand("SELECT Name, Surname FROM Students WHERE Name = 'Emir'", conn))
-    //         {
-    //             using (var reader = cmd.ExecuteReader())
-    //             {
-                    
-    //                 while (reader.Read())
-    //                 {
-    //                     var dataTable = new DataTable();
-    //                     dataTable.Load(reader);
-    //                     string row_as_json = JsonSerializer.Serialize(dataTable);
-                        
-    //                     //result.Add(actie(JsonSerializer.Deserialize<T>(row_as_json)));
-    //                     // int columnCount = reader.FieldCount;
-    //                     // string[] row = new string[columnCount]; 
-
-    //                     // for(int i = 0; i < row.Length; i++){
-    //                     //     row[i] = reader.GetName(i) + ":" + reader.GetValue(i).ToString();
-    //                     // }
-                        
-    //                     // reader.GetValues(row);
-    //                     // string row_as_json = JsonSerializer.Serialize(row);
-
-
-    //                     // result.Add(actie(reader.GetValue()))
-    //                     // reader.getva
-    //                     // T student = new T
-    //                     // list.Add(new T(reader.GetValue(0));
-    //                 }
-    //             }
-    //         }
-            
-    //         return result;
-
-            
-    //         // Retrieve all rows
-    //         // Insert some data
-    //         // using (var cmd = new NpgsqlCommand(students, conn))
-    //         // {
-    //         //     cmd.ExecuteNonQuery();
-    //         //     //Console.WriteLine('k');
-    //         // }
-
-    //         // using (var cmd = new NpgsqlCommand(grades, conn))
-    //         // {
-    //         //     cmd.ExecuteNonQuery();
-    //         //     //Console.WriteLine('k');
-    //         // }
-
-    //         // using (var cmd = new NpgsqlCommand(studentData, conn))
-    //         // {
-    //         //     cmd.ExecuteNonQuery();
-    //         //    // Console.WriteLine('k');
-    //         // }
-    //     }
-    // }
 }
