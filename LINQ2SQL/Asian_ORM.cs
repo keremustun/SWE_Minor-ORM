@@ -9,7 +9,6 @@ using System.Dynamic;
 namespace Asian_ORM{
     public class DbSet<T>{
         // Manual: first .where() then .select()
-        private List<T> lst = new List<T>();
         public string selectString, whereString, orderByString, groupByString; 
         public string tableName = typeof(T).Name;
         public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
@@ -134,9 +133,9 @@ namespace Asian_ORM{
                 //Console.WriteLine(whereLeftOperand);
                 result.selectString = selectString;
                 result.whereString = $"WHERE {whereLeftOperand} {whereOperator} ";
-                if (int.TryParse(whereRightOperand, out int n))
+                if (int.TryParse(whereRightOperand, out int output))
                 {
-                    result.whereString += whereRightOperand;
+                    result.whereString += output;
                 }
                 else
                 {
