@@ -9,6 +9,8 @@ using System.Dynamic;
 namespace Asian_ORM{
     public class DbSet<T>{
         // Manual: first .where() then .select()
+        //Most times you're going to want Func or Action if all that needs to happen is to run some code. You need Expression when the code needs to be analyzed, serialized, or optimized before it is run. Expression is for thinking about code, Func/Action is for running it.
+        //An expression simply turns a delegate into a data about itself. So a => a + 1 becomes something like "On the left side there's an int a. On the right side you add 1 to it." That's it. You can go home now. It's obviously more structured than that, but that's essentially all an expression tree really is--nothing to wrap your head around.
         private List<T> lst = new List<T>();
         public string selectString, whereString, orderByString, groupByString; 
         public string tableName = typeof(T).Name;
@@ -164,8 +166,7 @@ namespace Asian_ORM{
                         break;
                     case "NotEqual":
                         whereOperator += "!=";
-                        break;
-                    // asd;lasdjl;kasd;lasdasd;l    
+                        break; 
                     case "Between":
                         whereOperator += "...";
                         break;
@@ -182,13 +183,15 @@ namespace Asian_ORM{
             if (!ReferenceEquals((predicate.Body as BinaryExpression),null))
             {
                 string whereLeftOperand  = "" + (predicate.Body as BinaryExpression).Left.ToString().Split(".")[1];
+                System.Console.WriteLine(whereLeftOperand);
                 
                 string whereOperator = getWhereOperator(predicate);
                 string whereRightOperand = "" + (predicate.Body as BinaryExpression).Right.ToString().Replace("\"", "");
-                //Console.WriteLine(whereRightOperand);
                 // Example:  "WHERE Age > 3   
                 result.selectString = selectString;
+                System.Console.WriteLine(result.selectString);
                 result.whereString = $"WHERE {whereLeftOperand} {whereOperator} ";
+                //
                 if (int.TryParse(whereRightOperand, out int n))
                 {
                     result.whereString += whereRightOperand;
@@ -200,8 +203,6 @@ namespace Asian_ORM{
 
                 result.orderByString = result.whereString;
             }
-            
-            //Console.WriteLine(result.whereString);
             return result;
         }
        

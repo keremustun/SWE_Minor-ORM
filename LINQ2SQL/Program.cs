@@ -43,7 +43,7 @@ namespace LINQ2SQL
   
 
             var ax = grades.Where(g => g.CourseId > 1000).Select(s => new{s.Value}).ExecuteQuery();
-            //var axx = students2..Select(s => new{s.Name,s.Surname}).ExecuteQuery();
+            //var axx = students2.Select(s => new{s.Name,s.Surname}).ExecuteQuery();
             foreach(var student in ax ){
                 foreach(var kv in student)
                 {
