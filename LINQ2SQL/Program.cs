@@ -17,29 +17,29 @@ namespace LINQ2SQL
         
         static void Main(string[] args)
         {
-            // NpgsqlConnection conn = new(connection_string);
-            // conn.Open();
-            // using (var cmd = new NpgsqlCommand(studentsqry, conn))
-            // {
-            //     cmd.ExecuteNonQuery();
-            //     //Console.WriteLine('k');
-            // }
+            NpgsqlConnection conn = new(connection_string);
+            conn.Open();
+            using (var cmd = new NpgsqlCommand(studentsqry, conn))
+            {
+                cmd.ExecuteNonQuery();
+                //Console.WriteLine('k');
+            }
 
-            // using (var cmd = new NpgsqlCommand(gradesqry, conn))
-            // {
-            //     cmd.ExecuteNonQuery();
-            //    // Console.WriteLine('k');
-            // }
-            // using (var cmd = new NpgsqlCommand(studentData, conn))
-            //             {
-            //                 cmd.ExecuteNonQuery();
-            //             // Console.WriteLine('k');
-            //             }
-            // using (var cmd = new NpgsqlCommand(gradesData, conn))
-            // {
-            //     cmd.ExecuteNonQuery();
-            //    // Console.WriteLine('k');
-            // }
+            using (var cmd = new NpgsqlCommand(gradesqry, conn))
+            {
+                cmd.ExecuteNonQuery();
+               // Console.WriteLine('k');
+            }
+            using (var cmd = new NpgsqlCommand(studentData, conn))
+                        {
+                            cmd.ExecuteNonQuery();
+                        // Console.WriteLine('k');
+                        }
+            using (var cmd = new NpgsqlCommand(gradesData, conn))
+            {
+                cmd.ExecuteNonQuery();
+               // Console.WriteLine('k');
+            }
   
 
             var ax = grades.Where(g => g.CourseId > 1000).Select(s => new{s.Value}).ExecuteQuery();
@@ -75,8 +75,6 @@ namespace LINQ2SQL
         //     lambdaHereLol(2);
         // }
         
-               
-
         }
 
         public class Student{
@@ -100,8 +98,5 @@ namespace LINQ2SQL
         }
 
         //students.Select(s => new { s.Name, s.Surname }).Include(s => s.Grades, q => q.Select(g => new { g.Value, g.CourseId  }));
-
-        
-    
-
+        //Example code
 }

@@ -260,6 +260,7 @@ namespace Asian_ORM{
             return ExpandoToDict((ExpandoObject) dict, classType);
         }
 
+        //To dictionary
         public static Dictionary<string,object> ExpandoToDict(ExpandoObject dictionary, T student)
         {
             IDictionary<string, object> newDictionary = dictionary;

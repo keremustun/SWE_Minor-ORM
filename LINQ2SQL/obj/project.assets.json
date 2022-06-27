@@ -527,19 +527,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\kerem\\.nuget\\packages\\": {}
+    "C:\\Users\\kalej\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kerem\\Documents\\GitHub\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\LINQ2SQL.csproj",
+      "projectUniqueName": "D:\\documenten\\GitHub\\SWE_Minor-LINQ2SQL\\LINQ2SQL\\LINQ2SQL.csproj",
       "projectName": "LINQ2SQL",
-      "projectPath": "C:\\Users\\kerem\\Documents\\GitHub\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\LINQ2SQL.csproj",
-      "packagesPath": "C:\\Users\\kerem\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kerem\\Documents\\GitHub\\SWE_Minor-LINQ2SQL-by_The_Turks\\LINQ2SQL\\obj\\",
+      "projectPath": "D:\\documenten\\GitHub\\SWE_Minor-LINQ2SQL\\LINQ2SQL\\LINQ2SQL.csproj",
+      "packagesPath": "C:\\Users\\kalej\\.nuget\\packages\\",
+      "outputPath": "D:\\documenten\\GitHub\\SWE_Minor-LINQ2SQL\\LINQ2SQL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\kerem\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\kalej\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
