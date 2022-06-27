@@ -40,18 +40,15 @@ namespace Asian_ORM{
             result.whereString = whereString;
 
 
-  // foreach(var item in lst){
+            // foreach(var item in lst){
             //     result.Add(lambd(item));
             // }
             
             // foreach(var item in result.lst){
             //     Console.WriteLine(item);
             // }
-            
-
-            
+                        
             // Expression<Func<T,U>> selectBodyExpression = selectBody as Expression<Func<T,U>> ;
-
 
             // Expression<Func<T,U>> xpression = selectBody as Expression<Func<T,U>>;
             // var x = xpression.Body as ;
