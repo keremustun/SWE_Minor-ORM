@@ -13,13 +13,13 @@ namespace Asian_ORM{
         public string tableName = typeof(T).Name;
         public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
         
-        public DbSet<U> Select<U>(Expression<Func<T,U>> lambd)
+        public DbSet<T> Select<U>(Expression<Func<T,U>> lambda)
         {
-            DbSet<U> result = new();
+            DbSet<T> result = new();
             string columns = "";
-            if (!ReferenceEquals((lambd.Body as NewExpression),null))
+            if (!ReferenceEquals((lambda.Body as NewExpression),null))
             {
-                var members = (lambd.Body as NewExpression).Members;
+                var members = (lambda.Body as NewExpression).Members;
 
                 for(int i = 0; i < members.Count; i++){
                     string memberName = members[i].Name;
@@ -28,6 +28,9 @@ namespace Asian_ORM{
                         columns += ",";
                 }   
             } 
+            else if(ReferenceEquals((lambda.Body as NewExpression),null)) {
+                columns = lambda.Body.ToString().Split(".")[1];
+            }
             else{
                 columns += "*";
             }
@@ -35,9 +38,9 @@ namespace Asian_ORM{
             result.selectString = $"SELECT {columns} FROM {tableName} ";
             result.whereString = whereString;
             return result;
-            }
+        }
           
-        public DbSet<T> OrderBy<U>(Expression<Func<T,U>> lambd) 
+        public DbSet<T> OrderBy<U>(Expression<Func<T,U>> lambda) 
         {
             DbSet<T> result = new();
             result.selectString = selectString;
@@ -45,8 +48,8 @@ namespace Asian_ORM{
             result.groupByString = groupByString;
 
             string columns = "";
-            if (!ReferenceEquals((lambd.Body as NewExpression),null)) {
-                var members = (lambd.Body as NewExpression).Members;
+            if (!ReferenceEquals((lambda.Body as NewExpression),null)) {
+                var members = (lambda.Body as NewExpression).Members;
                 for(int i = 0; i < members.Count; i++){
                     string memberName = members[i].Name;
                     columns += memberName;
@@ -56,12 +59,12 @@ namespace Asian_ORM{
                 result.orderByString = $" order by {columns}";
             }
             else {
-                result.orderByString = " order by " + lambd.Body.ToString().Split(".")[1];
+                result.orderByString = " order by " + lambda.Body.ToString().Split(".")[1];
             }
             return result;
         }
 
-        public DbSet<T> GroupBy<U>(Expression<Func<T,U>> lambd) 
+        public DbSet<T> GroupBy<U>(Expression<Func<T,U>> lambda) 
         {
             DbSet<T> result = new();
             result.selectString = selectString;
@@ -69,9 +72,9 @@ namespace Asian_ORM{
             result.orderByString = orderByString;
 
             string columns = "";
-            if (!ReferenceEquals((lambd.Body as NewExpression),null))
+            if (!ReferenceEquals((lambda.Body as NewExpression),null))
             {
-                var members = (lambd.Body as NewExpression).Members;
+                var members = (lambda.Body as NewExpression).Members;
 
                 for(int i = 0; i < members.Count; i++){
                     string memberName = members[i].Name;
@@ -110,15 +113,6 @@ namespace Asian_ORM{
                         break;
                     case "NotEqual":
                         whereOperator += "!=";
-                        break; 
-                    case "Between":
-                        whereOperator += "...";
-                        break;
-                    case "Like":
-                        whereOperator += "...";
-                        break;
-                    case "In":
-                        whereOperator += "...";
                         break;
                 }
                 return whereOperator;
@@ -139,7 +133,7 @@ namespace Asian_ORM{
                 }
                 else
                 {
-                     result.whereString += $"'{whereRightOperand}'";
+                    result.whereString += $"'{whereRightOperand}'";
                 }
 
                 result.orderByString = result.whereString;
@@ -177,7 +171,12 @@ namespace Asian_ORM{
             
             foreach (var prop in props)
             {
-                dict.Add(prop.Name, datarec[prop.Name]);
+                try {
+                    dict.Add(prop.Name, datarec[prop.Name]);
+                }
+                catch {
+                    Console.WriteLine("");
+                }
             }
             
             return new Dictionary<string, object>(dict);

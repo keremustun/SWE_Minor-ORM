@@ -25,12 +25,12 @@ namespace LINQ2SQL
             //     //Console.WriteLine('k');
             // }
   
-            //var ax = students.Select(s => new{s.Name,s.Surname}).ExecuteQuery();
-            var ax = students.Select(s => new{s.Name,s.Surname}).OrderBy(s => s.Name).GroupBy(s => new {s.Name, s.Surname}).ExecuteQuery();
-            //var ax = grades.Where(g => g.CourseId > 100).Select(s => new{s.Value}).ExecuteQuery();
-            //var ax = grades.Where(g => g.CourseId > 100).Select(s => new{s.Value}).OrderBy(s => s.Value).ExecuteQuery();
+            var ax = students.Select(s => s.Name).ExecuteQuery();
+            //var ax = students.Select(s => new{s.Name,s.Surname}).OrderBy(s => s.Name).GroupBy(s => new {s.Name, s.Surname}).ExecuteQuery();
+            //var ax = grades.Where(g => g.CourseId > 100).Select(s => s.Value).ExecuteQuery();
+            //var ax = grades.Where(g => g.CourseId > 100).Select(s => s.Value).OrderBy(s => s.Value).ExecuteQuery();
             
-            foreach(var student in ax ){
+            foreach(var student in ax ) {
                 foreach(var kv in student)
                 {
                     Console.WriteLine(kv.Key + ":" + kv.Value);
