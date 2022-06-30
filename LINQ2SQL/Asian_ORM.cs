@@ -6,9 +6,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Dynamic;
-namespace Asian_ORM{
-    public class DbSet<T>{
-        // Manual: first .where() then .select()
+
+namespace Asian_ORM {
+    public class DbSet<T> {
         public string selectString, whereString, orderByString, groupByString; 
         public string tableName = typeof(T).Name;
         public static string connection_string = "UserID=postgres;Password=root;Host=localhost;Port=5432;Database=LINQ2SQL;Pooling=true;";
@@ -17,11 +17,10 @@ namespace Asian_ORM{
         {
             DbSet<T> result = new();
             string columns = "";
-            if (!ReferenceEquals((lambda.Body as NewExpression),null))
-            {
+            if (!ReferenceEquals((lambda.Body as NewExpression),null)) {
                 var members = (lambda.Body as NewExpression).Members;
 
-                for(int i = 0; i < members.Count; i++){
+                for(int i = 0; i < members.Count; i++) {
                     string memberName = members[i].Name;
                     columns += memberName;
                     if (i < members.Count - 1)
@@ -31,7 +30,7 @@ namespace Asian_ORM{
             else if(ReferenceEquals((lambda.Body as NewExpression),null)) {
                 columns = lambda.Body.ToString().Split(".")[1];
             }
-            else{
+            else {
                 columns += "*";
             }
 
@@ -40,8 +39,7 @@ namespace Asian_ORM{
             return result;
         }
           
-        public DbSet<T> OrderBy<U>(Expression<Func<T,U>> lambda) 
-        {
+        public DbSet<T> OrderBy<U>(Expression<Func<T,U>> lambda) {
             DbSet<T> result = new();
             result.selectString = selectString;
             result.whereString = whereString;
@@ -64,38 +62,32 @@ namespace Asian_ORM{
             return result;
         }
 
-        public DbSet<T> GroupBy<U>(Expression<Func<T,U>> lambda) 
-        {
+        public DbSet<T> GroupBy<U>(Expression<Func<T,U>> lambda) {
             DbSet<T> result = new();
             result.selectString = selectString;
             result.whereString = whereString;
             result.orderByString = orderByString;
 
             string columns = "";
-            if (!ReferenceEquals((lambda.Body as NewExpression),null))
-            {
+            if (!ReferenceEquals((lambda.Body as NewExpression),null)) {
                 var members = (lambda.Body as NewExpression).Members;
 
-                for(int i = 0; i < members.Count; i++){
+                for(int i = 0; i < members.Count; i++) {
                     string memberName = members[i].Name;
                     columns += memberName;
                     if (i < members.Count - 1)
                         columns += ",";
                 }
-                
             }
             
             result.groupByString = $" group by {columns}";
             return result;
         }
 
-        public DbSet<T> Where(Expression<Func<T,bool>> predicate)
-        {
-            string getWhereOperator(Expression<Func<T,bool>> predicate)
-            {
+        public DbSet<T> Where(Expression<Func<T,bool>> predicate) {
+            string getWhereOperator(Expression<Func<T,bool>> predicate) {
                 string whereOperator = "";
-                switch (predicate.Body.NodeType.ToString())
-                {
+                switch (predicate.Body.NodeType.ToString()) {
                     case "Equal": 
                         whereOperator += "=";
                         break;
@@ -119,8 +111,7 @@ namespace Asian_ORM{
             }
 
             DbSet<T> result = new();
-            if (!ReferenceEquals((predicate.Body as BinaryExpression),null))
-            {
+            if (!ReferenceEquals((predicate.Body as BinaryExpression),null)) {
                 string whereLeftOperand  = "" + (predicate.Body as BinaryExpression).Left.ToString().Split(".")[1];
                 string whereOperator = getWhereOperator(predicate);
                 string whereRightOperand = "" + (predicate.Body as BinaryExpression).Right.ToString().Replace("\"", "");
@@ -141,12 +132,9 @@ namespace Asian_ORM{
             return result;
         }
        
-        public List<Dictionary<string,object>> ExecuteQuery() 
-        {
-            
+        public List<Dictionary<string,object>> ExecuteQuery() {
             string sqlstring = selectString + whereString + groupByString + orderByString;
             Console.WriteLine(sqlstring);
-            var dataTable = new DataTable();
             NpgsqlConnection conn = new(connection_string);
             conn.Open();
             List<Dictionary<string,object>> res = new();
@@ -163,11 +151,10 @@ namespace Asian_ORM{
             return res;
         }
 
-        public static Dictionary<string,object> propToDict(IDataRecord datarec)
-        {
+        public static Dictionary<string,object> propToDict(IDataRecord datarec) {
             var type = typeof(T);
             var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var dict = new ExpandoObject() as IDictionary<string, Object>;
+            Dictionary<string, object> dict = new();
             
             foreach (var prop in props)
             {
@@ -179,7 +166,7 @@ namespace Asian_ORM{
                 }
             }
             
-            return new Dictionary<string, object>(dict);
+            return dict;
         }
     }
 }
